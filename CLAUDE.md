@@ -1,0 +1,1 @@
+@../archer/AGENTS.md
