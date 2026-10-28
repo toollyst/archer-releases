@@ -1,0 +1,35 @@
+{
+  "version": 1,
+  "engine": "0.0.1",
+  "commit": "e3ab35f7c0ffee00000000000000000000000000",
+  "host": "macos-arm64",
+  "schema": {
+    "reads": [1, 54],
+    "writes": 54
+  },
+  "editor": "Archer.app/Contents/MacOS/Archer",
+  "templates": [
+    {
+      "id": "blank-3d",
+      "name": {
+        "en": "Empty 3D",
+        "ko": "빈 3D"
+      },
+      "dimension": "3d",
+      "folder": "templates\\blank-3d",
+      "picture": "templates/blank-3d.png"
+    },
+    {
+      "id": "blank-2d",
+      "name": {
+        "en": "Empty 2D"
+      },
+      "dimension": "2d",
+      "folder": "templates/blank-2d"
+    }
+  ],
+  "toolchains": {
+    "typescript": "7.0.0",
+    "rust": "1.98.1"
+  }
+}

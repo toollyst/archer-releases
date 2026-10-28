@@ -1,0 +1,43 @@
+{
+  "version": 2,
+  "engines": [
+    {
+      "engine": "0.0.1",
+      "date": "2026-11-02",
+      "schema": {
+        "reads": [1, 54],
+        "writes": 54
+      },
+      "editor": {
+        "macos-arm64": {
+          "url": "https://github.com/toollyst/archer-releases/releases/download/engine-v0.0.1/archer-0.0.1-macos-arm64.tar.zst",
+          "bytes": 182000000,
+          "sha256": "0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef"
+        }
+      },
+      "platforms": {}
+    },
+    {
+      "engine": "0.1.0",
+      "date": "2026-12-01",
+      "schema": {
+        "reads": [1, 55],
+        "writes": 55
+      },
+      "editor": {
+        "macos-arm64": {
+          "url": "https://github.com/toollyst/archer-releases/releases/download/engine-v0.1.0/archer-0.1.0-macos-arm64.tar.zst",
+          "bytes": 185000000,
+          "sha256": "0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef"
+        }
+      },
+      "platforms": {
+        "web": {
+          "url": "https://github.com/toollyst/archer-releases/releases/download/engine-v0.1.0/archer-0.1.0-platform-web.tar.zst",
+          "bytes": 9000000,
+          "sha256": "0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef"
+        }
+      }
+    }
+  ]
+}

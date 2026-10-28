@@ -1,0 +1,12 @@
+{
+  "name": "archer-releases",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "check": "biome check && node scripts/check-schemas.mjs"
+  },
+  "devDependencies": {
+    "@biomejs/biome": "2.5.14",
+    "ajv": "^8.20.0"
+  }
+}

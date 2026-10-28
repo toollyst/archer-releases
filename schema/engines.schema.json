@@ -1,0 +1,77 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/toollyst/archer-releases/schema/engines.schema.json",
+  "title": "engines.json",
+  "description": "Every released Archer engine version and its downloads. Each release rewrites it whole and signs it with minisign (engines.json.minisig next to it). The hub reads it from the latest release and trusts it only after the signature checks.",
+  "type": "object",
+  "required": ["version", "engines"],
+  "additionalProperties": false,
+  "properties": {
+    "version": {
+      "description": "Version of this file's format. Readers reject versions they do not know.",
+      "const": 1
+    },
+    "engines": {
+      "description": "Released versions. Order carries no meaning; readers sort by `engine` (semver). Each `engine` appears once.",
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["engine", "date", "schema", "editor", "platforms"],
+        "additionalProperties": false,
+        "properties": {
+          "engine": {
+            "description": "Engine version (semver).",
+            "$ref": "engine.schema.json#/$defs/semver"
+          },
+          "date": {
+            "description": "Release day, UTC (YYYY-MM-DD).",
+            "type": "string",
+            "pattern": "^[0-9]{4}-(0[1-9]|1[0-2])-(0[1-9]|[12][0-9]|3[01])$"
+          },
+          "schema": {
+            "description": "Same as `schema` in that version's engine.json, so the hub can pick a version for a project before downloading.",
+            "$ref": "engine.schema.json#/properties/schema"
+          },
+          "editor": {
+            "description": "Editor bundle per host it runs on (e.g. macos-arm64). At least one.",
+            "type": "object",
+            "minProperties": 1,
+            "propertyNames": { "$ref": "engine.schema.json#/$defs/platform" },
+            "additionalProperties": { "$ref": "#/$defs/file" }
+          },
+          "platforms": {
+            "description": "Export runtime bundle per target (e.g. web, macos-arm64). Same version as the editor; installed under the version's platforms/<target>/.",
+            "type": "object",
+            "propertyNames": { "$ref": "engine.schema.json#/$defs/platform" },
+            "additionalProperties": { "$ref": "#/$defs/file" }
+          }
+        }
+      }
+    }
+  },
+  "$defs": {
+    "file": {
+      "description": "One downloadable tar.zst bundle.",
+      "type": "object",
+      "required": ["url", "bytes", "sha256"],
+      "additionalProperties": false,
+      "properties": {
+        "url": {
+          "description": "HTTPS address of the bundle.",
+          "type": "string",
+          "pattern": "^https://[^\\s]+\\.tar\\.zst$"
+        },
+        "bytes": {
+          "description": "Exact size in bytes.",
+          "type": "integer",
+          "minimum": 1
+        },
+        "sha256": {
+          "description": "SHA-256 of the bundle, lowercase hex.",
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        }
+      }
+    }
+  }
+}

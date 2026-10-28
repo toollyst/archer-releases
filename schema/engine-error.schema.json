@@ -1,0 +1,43 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/toollyst/archer-releases/schema/engine-error.schema.json",
+  "title": "Engine command error",
+  "description": "The single JSON line `Archer --open` or `Archer --new` writes to stderr before exiting with a non-zero code. The hub shows a screen per `error` kind and the `message` only as detail.",
+  "type": "object",
+  "required": ["version", "error", "message"],
+  "additionalProperties": false,
+  "properties": {
+    "version": {
+      "description": "Version of this line's format. Readers treat versions they do not know as `internal`.",
+      "const": 1
+    },
+    "error": {
+      "description": "What went wrong. not_found: the folder does not exist. not_a_project: the folder has no readable project.json. not_empty: --new was given a folder that has files. unknown_template: --new named a template this version does not ship. schema_too_new: the project needs a newer engine (see `schema`). schema_too_old: the project is older than this engine can migrate (see `schema`). already_open: another editor has the project open. io: the disk refused a read or write. internal: anything else (a bug).",
+      "enum": [
+        "not_found",
+        "not_a_project",
+        "not_empty",
+        "unknown_template",
+        "schema_too_new",
+        "schema_too_old",
+        "already_open",
+        "io",
+        "internal"
+      ]
+    },
+    "message": {
+      "description": "English explanation for logs and the detail line; never parsed.",
+      "type": "string"
+    },
+    "schema": {
+      "description": "The project's schema version. Present with schema_too_new and schema_too_old.",
+      "type": "integer",
+      "minimum": 1
+    }
+  },
+  "if": {
+    "properties": { "error": { "enum": ["schema_too_new", "schema_too_old"] } }
+  },
+  "then": { "required": ["schema"] },
+  "else": { "not": { "required": ["schema"] } }
+}

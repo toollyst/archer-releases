@@ -1,0 +1,150 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/toollyst/archer-releases/schema/engine.schema.json",
+  "title": "engine.json",
+  "description": "What one installed Archer engine version says about itself. The release writes the output of `Archer --describe` here unchanged; the hub reads only this file inside an installed version.",
+  "type": "object",
+  "required": [
+    "version",
+    "engine",
+    "host",
+    "schema",
+    "editor",
+    "templates",
+    "toolchains"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "version": {
+      "description": "Version of this file's format. Readers reject versions they do not know.",
+      "const": 1
+    },
+    "engine": {
+      "description": "Engine version (semver). A build without a stamped version says 0.0.0-dev.",
+      "$ref": "#/$defs/semver"
+    },
+    "commit": {
+      "description": "Engine source commit this version was built from (full git hash). Absent when the build was not stamped.",
+      "type": "string",
+      "pattern": "^[0-9a-f]{40}$"
+    },
+    "host": {
+      "description": "Operating system and CPU this bundle runs on, e.g. macos-arm64.",
+      "$ref": "#/$defs/platform"
+    },
+    "schema": {
+      "description": "Project format versions this engine handles.",
+      "type": "object",
+      "required": ["reads", "writes"],
+      "additionalProperties": false,
+      "properties": {
+        "reads": {
+          "description": "Lowest and highest project schema versions it opens, inclusive (older ones are migrated on open).",
+          "type": "array",
+          "prefixItems": [
+            {
+              "description": "Lowest readable schema version.",
+              "type": "integer",
+              "minimum": 1
+            },
+            {
+              "description": "Highest readable schema version; equals `writes`.",
+              "type": "integer",
+              "minimum": 1
+            }
+          ],
+          "items": false,
+          "minItems": 2
+        },
+        "writes": {
+          "description": "Project schema version it saves. Always the highest of `reads`.",
+          "type": "integer",
+          "minimum": 1
+        }
+      }
+    },
+    "editor": {
+      "description": "Path of the editor executable, relative to the installed version's folder, with forward slashes.",
+      "$ref": "#/$defs/relativePath"
+    },
+    "templates": {
+      "description": "Templates a new project can start from. Ids are unique.",
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["id", "name", "dimension", "folder"],
+        "additionalProperties": false,
+        "properties": {
+          "id": {
+            "description": "Stable identifier passed to `Archer --new --template`.",
+            "$ref": "#/$defs/id"
+          },
+          "name": {
+            "description": "Display name by locale (BCP 47 tag). English is required; other locales fall back to it.",
+            "type": "object",
+            "required": ["en"],
+            "properties": {
+              "en": {
+                "description": "English name.",
+                "type": "string",
+                "minLength": 1
+              }
+            },
+            "propertyNames": { "pattern": "^[a-z]{2,3}(-[A-Za-z0-9]{2,8})*$" },
+            "additionalProperties": { "type": "string", "minLength": 1 }
+          },
+          "dimension": {
+            "description": "Whether the template's world is 2D or 3D.",
+            "enum": ["2d", "3d"]
+          },
+          "folder": {
+            "description": "Template project folder, relative to the installed version's folder.",
+            "$ref": "#/$defs/relativePath"
+          },
+          "picture": {
+            "description": "Preview image (PNG), relative to the installed version's folder.",
+            "$ref": "#/$defs/relativePath"
+          }
+        }
+      }
+    },
+    "toolchains": {
+      "description": "Script compilers shipped inside this version.",
+      "type": "object",
+      "required": ["typescript", "rust"],
+      "additionalProperties": false,
+      "properties": {
+        "typescript": {
+          "description": "TypeScript compiler version.",
+          "type": "string",
+          "minLength": 1
+        },
+        "rust": {
+          "description": "Rust toolchain version.",
+          "type": "string",
+          "minLength": 1
+        }
+      }
+    }
+  },
+  "$defs": {
+    "semver": {
+      "type": "string",
+      "pattern": "^(0|[1-9][0-9]*)\\.(0|[1-9][0-9]*)\\.(0|[1-9][0-9]*)(-[0-9A-Za-z.-]+)?$"
+    },
+    "platform": {
+      "description": "Platform id: lowercase words joined by '-', e.g. macos-arm64, windows-x64, web.",
+      "type": "string",
+      "pattern": "^[a-z0-9]+(-[a-z0-9]+)*$"
+    },
+    "id": {
+      "type": "string",
+      "pattern": "^[a-z0-9]+(-[a-z0-9]+)*$"
+    },
+    "relativePath": {
+      "description": "Relative path with forward slashes: no leading '/', no '\\', no '.' or '..' segments.",
+      "type": "string",
+      "pattern": "^(?:[^/\\\\:.][^/\\\\:]*|\\.[^/\\\\:.][^/\\\\:]*|\\.\\.[^/\\\\:]+)(?:/(?:[^/\\\\:.][^/\\\\:]*|\\.[^/\\\\:.][^/\\\\:]*|\\.\\.[^/\\\\:]+))*$"
+    }
+  }
+}

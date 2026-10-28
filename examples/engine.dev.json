@@ -1,0 +1,9 @@
+{
+  "version": 1,
+  "engine": "0.0.0-dev",
+  "host": "linux-x64",
+  "schema": { "reads": [54, 54], "writes": 54 },
+  "editor": "bin/.archer/archer",
+  "templates": [],
+  "toolchains": { "typescript": "7.0.0", "rust": "1.98.1" }
+}
